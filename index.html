@@ -17,8 +17,8 @@ body{
 
 #loginPage{
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   height:100vh;
   background:linear-gradient(135deg,#6a11cb 0%,#2575fc 100%);
 }
@@ -29,6 +29,7 @@ body{
   border-radius:30px;
   width:90%;
   max-width:400px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 .login-input{
@@ -52,20 +53,24 @@ body{
   color:white;
 }
 
+.backBtn{
+  background:#ff5722;
+}
+
 #gameContent{ display:none; }
 
 header{
   background:linear-gradient(90deg,#ff4081,#ff9800);
   color:white;
   padding:18px;
-  font-size:24px;
+  font-size:22px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- LOGIN PAGE -->
 <div id="loginPage">
   <div class="login-card">
     <h2>🚀 Welcome</h2>
@@ -80,48 +85,53 @@ header{
   </div>
 </div>
 
-<!-- GAME -->
+<!-- GAME PAGE -->
 <div id="gameContent">
   <header>🌈 <span id="welcomeMsg"></span> 🌈</header>
-  <h2>🎉 You are logged in successfully!</h2>
-  <button class="btn" onclick="logout()">Logout</button>
+  <h2>🎉 Login Successful!</h2>
+  <button class="btn backBtn" onclick="logout()">Logout 🔙</button>
 </div>
 
 <script>
-/* ================= SUPABASE CONFIG ================= */
 
-// 🔴 REPLACE THESE WITH YOUR REAL VALUES
+/* ================= SUPABASE SETUP ================= */
+
 const SUPABASE_URL = "https://uqayciprokmithlsyjcb.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYXljaXByb2ttaXRobHN5amNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwODUxNDAsImV4cCI6MjA4NzY2MTE0MH0.VzP6louhUhCQ1wkYT-blz9F240AxRZ59mYkoT_5_JSk";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYXljaXByb2ttaXRobHN5amNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwODUxNDAsImV4cCI6MjA4NzY2MTE0MH0.VzP6louhUhCQ1wkYT-blz9F240AxRZ59mYkoT_5_JSk";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-/* ================= AUTH FUNCTIONS ================= */
+/* ================= SIGNUP ================= */
 
-async function signUp(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+async function signUp() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
   if(!email || !password){
-    alert("Enter email and password");
+    alert("Please enter email and password");
     return;
   }
 
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email: email,
     password: password,
   });
 
   if(error){
     alert(error.message);
-  }else{
-    alert("Signup successful! Please check your email if confirmation is required.");
+  } else {
+    alert("Signup successful! You can now login.");
   }
 }
 
-async function signIn(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+/* ================= LOGIN ================= */
+
+async function signIn() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
@@ -130,30 +140,35 @@ async function signIn(){
 
   if(error){
     alert(error.message);
-  }else{
-    launchGame(email);
+  } else {
+    launchGame(data.user.email);
   }
 }
 
-async function logout(){
+/* ================= LOGOUT ================= */
+
+async function logout() {
   await supabase.auth.signOut();
   document.getElementById("gameContent").style.display="none";
   document.getElementById("loginPage").style.display="flex";
 }
 
+/* ================= LAUNCH GAME ================= */
+
 function launchGame(email){
-  document.getElementById("welcomeMsg").textContent="Hello, "+email;
+  document.getElementById("welcomeMsg").textContent = "Hello, " + email;
   document.getElementById("loginPage").style.display="none";
   document.getElementById("gameContent").style.display="block";
 }
 
-/* ================= AUTO SESSION CHECK ================= */
+/* ================= AUTO SESSION ================= */
 
 supabase.auth.getSession().then(({data:{session}})=>{
   if(session){
     launchGame(session.user.email);
   }
 });
+
 </script>
 
 </body>
