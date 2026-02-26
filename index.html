@@ -8,146 +8,285 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  text-align:center;
-  background:linear-gradient(135deg,#6a11cb,#2575fc);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+body {
+  margin: 0;
+  font-family: "Comic Sans MS", Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(180deg, #ffe0f0, #fff8e1);
+  min-height: 100vh;
 }
 
-.card{
-  background:white;
-  padding:40px;
-  border-radius:20px;
-  width:90%;
-  max-width:400px;
+/* --- PROFESSIONAL AUTH STYLES --- */
+.auth-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg,#667eea,#764ba2);
 }
 
-input{
-  width:90%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  border:2px solid #ff9800;
-  text-align:center;
+.auth-card {
+  background: white;
+  padding: 40px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 25px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
-button{
-  padding:12px 20px;
-  margin:8px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  background:#4caf50;
-  color:white;
+.auth-card h2 {
+  margin: 0;
+  color: #6a11cb;
+  font-size: 26px;
 }
 
-#game{
-  display:none;
+.auth-card p {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #6a11cb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-btn:hover {
+  background: #4e0fa3;
+}
+
+.signup {
+  background: #ff9800;
+}
+
+.signup:hover {
+  background: #e68900;
+}
+
+.auth-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: red;
+}
+
+/* --- EXISTING GAME STYLES --- */
+#gameContent { display: none; }
+
+header {
+  background: linear-gradient(90deg, #ff4081, #ff9800);
+  color: white;
+  padding: 18px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#rewardBar {
+  background: #fff;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.reward-item { margin: 5px; }
+.reward-trophy { color: #ff9800; }
+.reward-star { color: #fbc02d; }
+.reward-candy { color: #e91e63; }
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card-blue, .card-3d, .card-green {
+  color: white;
+  padding: 28px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+.card-blue:hover, .card-3d:hover, .card-green:hover { transform: scale(1.05); }
+
+.card-blue { background: #2196f3; }
+.card-3d { background: #ff5722; }
+.card-green { background: #4caf50; }
+
+#content {
+  background: white;
+  margin: 15px auto;
+  padding: 20px;
+  border-radius: 28px;
+  min-height: 340px;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.key {
+  width: 60px; height: 60px; margin: 6px;
+  display: inline-flex; justify-content: center; align-items: center;
+  font-weight: bold; color: white; border-radius: 12px;
+  cursor: pointer; font-size: 24px;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+}
+.key:active { transform: translateY(4px); box-shadow: none; }
+
+.color-box {
+  width: 100px; height: 100px; margin: 8px;
+  border-radius: 15px;
+  display: inline-flex; justify-content: center; align-items: center;
+  font-weight: bold; font-size: 18px; cursor: pointer; color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+}
+.color-box:active { transform: translateY(4px); box-shadow: none; }
+
+.btn {
+  padding: 12px 24px; margin: 10px;
+  border: none; border-radius: 18px; font-size: 18px; font-weight: bold;
+  cursor: pointer; background: #4caf50; color: white;
+  box-shadow: 0 4px 0 #388e3c;
+}
+.btn:active { transform: translateY(4px); box-shadow: none; }
+.back { background: #ff5722; box-shadow: 0 4px 0 #e64a19; }
+
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(360deg); }
 }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="authCard">
-  <h2>Supabase Login</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <br>
-  <button id="signupBtn">Signup</button>
-  <button id="loginBtn">Login</button>
+<!-- PROFESSIONAL LOGIN -->
+<div id="loginPage" class="auth-container">
+  <div class="auth-card">
+    <h2>Kids Learning Fun</h2>
+    <p>Learn Smart. Play Smart.</p>
+
+    <input type="email" id="email" placeholder="Email Address" class="auth-input">
+    <input type="password" id="password" placeholder="Password" class="auth-input">
+
+    <button class="auth-btn" onclick="signIn()">Login</button>
+    <button class="auth-btn signup" onclick="signUp()">Create Account</button>
+
+    <p id="authMessage" class="auth-message"></p>
+  </div>
 </div>
 
-<div class="card" id="game">
-  <h2 id="welcome"></h2>
-  <button id="logoutBtn">Logout</button>
+<div id="gameContent">
+  <header>🌈 <span id="welcomeMsg">Kids Learning Fun</span> 🌈</header>
+  <div id="rewardBar">
+    <div class="reward-item reward-trophy">🏆 Trophies: <span id="trophies">0</span></div>
+    <div class="reward-item reward-star">⭐ Stars: <span id="stars">0</span></div>
+    <div class="reward-item reward-candy">🍬 Candies: <span id="candies">0</span></div>
+  </div>
+
+  <section class="menu">
+    <div class="card-blue" onclick="learnABC()">🔤 Alphabets</div>
+    <div class="card-3d" onclick="learnNUM()">🔢 Numbers</div>
+    <div class="card-green" onclick="learnCOLOR()">🎨 Colors</div>
+  </section>
+
+  <section id="content">
+    <h2>👶 Tap a subject to start learning 😊</h2>
+  </section>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
 
-  // 🔴 REPLACE THESE
-  const SUPABASE_URL = "sb_publishable_SLXprYZvkwqAE5FDGJzZAw_I4Zn6yE1";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYXljaXByb2ttaXRobHN5amNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwODUxNDAsImV4cCI6MjA4NzY2MTE0MH0.VzP6louhUhCQ1wkYT-blz9F240AxRZ59mYkoT_5_JSk";
+/* SUPABASE CONFIG */
+const SUPABASE_URL = "https://uqayciprokmithlsyjcb.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYXljaXByb2ttaXRobHN5amNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwODUxNDAsImV4cCI6MjA4NzY2MTE0MH0.VzP6louhUhCQ1wkYT-blz9F240AxRZ59mYkoT_5_JSk";
 
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const signupBtn = document.getElementById("signupBtn");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  const authCard = document.getElementById("authCard");
-  const gameDiv = document.getElementById("game");
-  const welcomeText = document.getElementById("welcome");
-
-  signupBtn.addEventListener("click", async function() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if(!email || !password){
-      alert("Enter email and password");
-      return;
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if(error){
-      alert(error.message);
-    } else {
-      alert("Signup successful! You can now login.");
-    }
-  });
-
-  loginBtn.addEventListener("click", async function() {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if(error){
-      alert(error.message);
-    } else {
-      showGame(data.user.email);
-    }
-  });
-
-  logoutBtn.addEventListener("click", async function() {
-    await supabase.auth.signOut();
-    authCard.style.display = "block";
-    gameDiv.style.display = "none";
-  });
-
-  function showGame(email){
-    welcomeText.textContent = "Welcome " + email;
-    authCard.style.display = "none";
-    gameDiv.style.display = "block";
+/* AUTO SESSION RESTORE */
+window.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    launchGame(session.user.email);
   }
+});
 
-  // Auto login if session exists
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if(session){
-      showGame(session.user.email);
-    }
+/* SIGN UP */
+async function signUp() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
   });
 
-});
+  if (error) {
+    showMessage(error.message);
+  } else {
+    showMessage("Account created! You can now login.");
+  }
+}
+
+/* LOGIN */
+async function signIn() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error, data } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  });
+
+  if (error) {
+    showMessage(error.message);
+  } else {
+    launchGame(data.user.email);
+  }
+}
+
+function showMessage(msg) {
+  document.getElementById("authMessage").innerText = msg;
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+  location.reload();
+}
+
+/* KEEPING YOUR ORIGINAL launchGame FUNCTION */
+function launchGame(name) {
+  document.getElementById("welcomeMsg").textContent = "Hello, " + name + "!";
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("gameContent").style.display = "block";
+}
+
 </script>
 
 </body>
