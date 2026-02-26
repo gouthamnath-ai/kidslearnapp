@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Learning Fun</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:"Comic Sans MS",Arial;
+  text-align:center;
+  background:linear-gradient(180deg,#ffe0f0,#fff8e1);
+}
+
+#loginPage{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  background:linear-gradient(135deg,#6a11cb 0%,#2575fc 100%);
+}
+
+.login-card{
+  background:white;
+  padding:40px;
+  border-radius:30px;
+  width:90%;
+  max-width:400px;
+}
+
+.login-input{
+  width:90%;
+  padding:12px;
+  margin:10px 0;
+  border:3px solid #ff9800;
+  border-radius:15px;
+  font-size:16px;
+  text-align:center;
+}
+
+.btn{
+  padding:12px 24px;
+  margin:8px;
+  border:none;
+  border-radius:18px;
+  font-weight:bold;
+  cursor:pointer;
+  background:#4caf50;
+  color:white;
+}
+
+#gameContent{ display:none; }
+
+header{
+  background:linear-gradient(90deg,#ff4081,#ff9800);
+  color:white;
+  padding:18px;
+  font-size:24px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-card">
+    <h2>🚀 Welcome</h2>
+
+    <input type="email" id="email" class="login-input" placeholder="Email">
+    <input type="password" id="password" class="login-input" placeholder="Password">
+
+    <br>
+
+    <button class="btn" onclick="signIn()">Login 🔐</button>
+    <button class="btn" onclick="signUp()">Signup ✨</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameContent">
+  <header>🌈 <span id="welcomeMsg"></span> 🌈</header>
+  <h2>🎉 You are logged in successfully!</h2>
+  <button class="btn" onclick="logout()">Logout</button>
+</div>
+
+<script>
+/* ================= SUPABASE CONFIG ================= */
+
+// 🔴 REPLACE THESE WITH YOUR REAL VALUES
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ================= AUTH FUNCTIONS ================= */
+
+async function signUp(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if(!email || !password){
+    alert("Enter email and password");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+  });
+
+  if(error){
+    alert(error.message);
+  }else{
+    alert("Signup successful! Please check your email if confirmation is required.");
+  }
+}
+
+async function signIn(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  });
+
+  if(error){
+    alert(error.message);
+  }else{
+    launchGame(email);
+  }
+}
+
+async function logout(){
+  await supabase.auth.signOut();
+  document.getElementById("gameContent").style.display="none";
+  document.getElementById("loginPage").style.display="flex";
+}
+
+function launchGame(email){
+  document.getElementById("welcomeMsg").textContent="Hello, "+email;
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("gameContent").style.display="block";
+}
+
+/* ================= AUTO SESSION CHECK ================= */
+
+supabase.auth.getSession().then(({data:{session}})=>{
+  if(session){
+    launchGame(session.user.email);
+  }
+});
+</script>
+
+</body>
+</html>
